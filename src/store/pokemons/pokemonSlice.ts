@@ -1,38 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { apiPokemon } from '../../services';
 
-export interface Pokemon {
-    id: number;
-    name: string;
-    base_experience: number;
-    height: number;
-    is_default: boolean;
-    order: number;
-    weight: number;
-    abilities: Ability[];
-    forms: NamedAPIResource[];
-    game_indices: VersionGameIndex[];
-    held_items: PokemonHeldItem[];
-    location_area_encounters: string;
-    moves: PokemonMove[];
-    sprites: PokemonSprites;
-    species: NamedAPIResource;
-    stats: PokemonStat[];
-    types: PokemonType[];
+export interface PokemonType {
+  id: string;
+  name: string;
+  tamanho: number;
+}
+export interface PokemonsType {
+  pokemons: PokemonType[];
 }
 
-interface NotesType {
-    notes: NoteType[];
-    loading: boolean;
-  }
-
-const initialState: NotesType = {
-  notes: [],
-  loading: false
+const initialState: PokemonsType = {
+  pokemons: []
 };
-
-export const getPokemon = createAsyncThunk('notes/getNotes', async () => {
-  const response = await apiPokemon.get('/notes');
+export const getPokemon = createAsyncThunk('pokemons', async (name: PokemonsType) => {
+  const response = await apiPokemon.get(`/pokemon,${name}`);
 
   if (response.status === 200) {
     return response.data;
@@ -60,5 +42,6 @@ const pokemonSlice = createSlice({
       });
   }
 });
+
 export const { clear } = pokemonSlice.actions;
 export default pokemonSlice.reducer;
