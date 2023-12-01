@@ -1,123 +1,109 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { apiPokemon } from '../../services';
+import axios from 'axios';
 
-export interface Pokemon {
+export interface TypePokemonType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
+
+export interface PokemonType {
   id: number;
   name: string;
-  base_experience: number;
   height: number;
-  is_default: boolean;
-  order: number;
-  weight: number;
-  abilities: Ability[];
-  forms: NamedAPIResource[];
-  game_indices: VersionGameIndex[];
-  held_items: PokemonHeldItem[];
-  location_area_encounters: string;
-  moves: PokemonMove[];
-  sprites: PokemonSprites;
-  species: NamedAPIResource;
-  stats: PokemonStat[];
-  types: PokemonType[];
+  types: TypePokemonType[];
+  sprites: {
+    front_default: string;
+    back_default: string;
+  };
 }
-interface Ability {
-  is_hidden: boolean;
-  slot: number;
-  ability: NamedAPIResource;
+export interface PokemonsSliceType {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  pokemons: PokemonType[];
+  loading: boolean;
 }
 
-interface NamedAPIResource {
-  name: string;
-  url: string;
-}
-
-interface VersionGameIndex {
-  game_index: number;
-  version: NamedAPIResource;
-}
-
-interface PokemonHeldItem {
-  item: NamedAPIResource;
-  version_details: PokemonHeldItemVersion[];
-}
-
-interface PokemonHeldItemVersion {
-  version: NamedAPIResource;
-  rarity: number;
-}
-
-interface PokemonMove {
-  move: NamedAPIResource;
-  version_group_details: PokemonMoveVersion[];
-}
-
-interface PokemonMoveVersion {
-  move_learn_method: NamedAPIResource;
-  version_group: NamedAPIResource;
-  level_learned_at: number;
-}
-
-interface PokemonSprites {
-  front_default: string;
-  front_shiny: string;
-  front_female: string | null;
-  front_shiny_female: string | null;
-  back_default: string;
-  back_shiny: string;
-  back_female: string | null;
-  back_shiny_female: string | null;
-}
-
-interface PokemonStat {
-  stat: NamedAPIResource;
-  effort: number;
-  base_stat: number;
-}
-
-interface PokemonType {
-  slot: number;
-  type: NamedAPIResource;
-}
-
-interface PokemonsType {
-  pokemons: Pokemon[];
-}
-const initialState: PokemonsType = {
-  pokemons: []
+const initialState: PokemonsSliceType = {
+  count: 0,
+  next: '',
+  previous: '',
+  pokemons: [],
+  loading: false
 };
 
-export const fetchPokemonList = createAsyncThunk('pokemon/fetchPokemonList', async () => {
+export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (urlParams: string | undefined) => {
+  const url = urlParams ? urlParams : 'https://pokeapi.co/api/v2/pokemon'; //atribui a url da api a uma variavel e uma condicao para que ela sirva de parametro para a minha função assincrona
+
   try {
-    const response = await apiPokemon.get('/pokemon?limit=20');
-    const data = await response.data;
+    const response = await axios.get(url); //faco uma requisicão get com o axios
 
     if (response.status === 200) {
-      return data;
+      // caso der certo
+      const { data } = response; //  desestruturo os dados da requisição atribuindo a uma variavel
+
+      const promises = data.results.map(async (item: any) => {
+        const response = await axios.get(item.url);
+
+        if (response.status === 200) {
+          const { data } = response;
+
+          const pokemon: PokemonType = {
+            id: data.id,
+            name: data.name,
+            height: data.height,
+            sprites: {
+              back_default: data.sprites.back_default,
+              front_default: data.sprites.front_default
+            },
+            types: data.types
+          };
+          return pokemon;
+        }
+        return null;
+      });
+      const pokemons = await Promise.all(promises);
+      return {
+        count: data.count,
+        next: data.next,
+        previous: data.previous,
+        pokemons: pokemons
+      };
     }
   } catch (error) {
-    return [];
+    throw 'Erro ao buscar pokemons';
   }
 });
 
 const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState: initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(fetchPokemonList.pending, (state) => {
+  reducers: {
+    clear: () => {
+      return initialState;
+    }
+  },
+  extraReducers(builder) {
+    builder.addCase(getPokemons.pending, (state) => {
+      state.loading = true;
       return state;
     }),
-      builder.addCase(fetchPokemonList.fulfilled, (state, action) => {
-        state.pokemons = action.payload.map((pokemon: Pokemon, index: number) => ({
-          id: index + 1,
-          name: pokemon.name,
-          sprites: {
-            front_default: pokemon.sprites.front_default
-          }
-        }));
-
-        return state;
+      builder.addCase(getPokemons.rejected, (state) => {
+        state.loading = false;
+        console.log('Erro no getPokemon');
+      }),
+      builder.addCase(getPokemons.fulfilled, (state, action) => {
+        state.count = action.payload?.count;
+        state.next = action.payload?.next;
+        state.previous = action.payload?.previous;
+        state.pokemons = action.payload?.pokemons || [];
+        state.loading = false;
       });
   }
 });
+export const { clear } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

@@ -1,31 +1,13 @@
-import { AppBar, Box, Grid, IconButton, Toolbar, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import React from 'react';
+import { Typography, Grid } from '@mui/material';
 
-const pokedex: React.FC = () => {
+const Pokedex: React.FC = () => {
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar style={{ backgroundColor: 'red' }}>
-            <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, justifyContent: 'center', display: { xs: 'none', sm: 'block' } }}
-            >
-              <CatchingPokemonIcon style={{ fontSize: '50px' }} />
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
+    <div>
+      <Typography variant="h3">pokédex</Typography>
       <Grid container spacing={2}></Grid>
-    </>
+    </div>
   );
 };
 
-export default pokedex;
+export default Pokedex;
