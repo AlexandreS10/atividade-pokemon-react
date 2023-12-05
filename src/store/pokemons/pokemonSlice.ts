@@ -14,6 +14,7 @@ export interface PokemonType {
   id: number;
   name: string;
   height: number;
+  weight: number;
   types: TypePokemonType[];
   sprites: {
     front_default: string;
@@ -33,6 +34,7 @@ const initialState: PokemonsSliceType = {
   next: '',
   previous: '',
   pokemons: [],
+
   loading: false
 };
 
@@ -56,6 +58,7 @@ export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (urlPa
             id: data.id,
             name: data.name,
             height: data.height,
+            weight: data.weight,
             sprites: {
               back_default: data.sprites.back_default,
               front_default: data.sprites.front_default

@@ -4,8 +4,9 @@ import { Box, CircularProgress, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { useEffect } from 'react';
 import { getPokemons } from '../store/pokemons/pokemonSlice';
-import PokemonCard from '../components/pokemonCard';
-import { ButtonAppBar } from '../components/navbar';
+import { BasicPagination } from '../components/BasicPagination';
+import { ButtonAppBar } from '../components/Navbar';
+import PokemonCard from '../components/PokemonCard';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ const Home: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+      <BasicPagination />
     </Box>
   );
 };
