@@ -1,12 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Box } from '@mui/material';
+import { ButtonAppBar } from '../components/Navbar';
+import PokemonCard from '../components/PokemonCard';
 
 const Pokedex: React.FC = () => {
   return (
-    <div>
-      <Typography variant="h3">pokédex</Typography>
-      <Grid container spacing={2}></Grid>
-    </div>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <ButtonAppBar />
+        <Typography variant="h3">pokédex</Typography>
+        <Grid container spacing={2} mt={2}>
+          {pokedex.map((pokemon) => (
+            <Grid item key={pokemon.id} xs={12} sm={6} md={4} lg={3}>
+              <PokemonCard pokemon={pokemon} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </>
   );
 };
 

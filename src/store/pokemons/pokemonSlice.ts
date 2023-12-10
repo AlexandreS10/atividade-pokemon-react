@@ -34,7 +34,6 @@ const initialState: PokemonsSliceType = {
   next: '',
   previous: '',
   pokemons: [],
-
   loading: false
 };
 
