@@ -11,7 +11,9 @@ const Pokedex: React.FC = () => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <ButtonAppBar />
-        <Typography variant="h3">pokédex</Typography>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Typography variant="h3">pokédex</Typography>
+        </div>
         <Grid container spacing={2} mt={2}>
           {pokedex.map((pokemon) => (
             <Grid item key={pokemon.id} xs={12} sm={6} md={4} lg={3}>

@@ -39,9 +39,21 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
     setListPokemon([...listPokemon, result]);
   }, [result]);
   return (
-    <Card style={{ backgroundImage: "url('./image/imagem-fundo-card.jpg')" }}>
-      <CardMedia component="img" alt={pokemon.name} image={pokemon.sprites.front_default} style={{ width: '50%' }} />
-      <CardContent>
+    <Card
+      style={{
+        backgroundImage: "url('./image/imagem-fundo-card.jpg')",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
+      <CardMedia
+        component="img"
+        alt={pokemon.name}
+        image={pokemon.sprites.front_default}
+        style={{ display: 'flex', width: '50%', justifyContent: 'center' }}
+      />
+      <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
         <Typography variant="h4">{pokemon.name}</Typography>
         <Typography># {pokemon.id}</Typography>
         <Typography>Altura: {pokemon.height / 10} M</Typography>

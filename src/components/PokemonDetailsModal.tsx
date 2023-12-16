@@ -31,36 +31,31 @@ const PokemonDetailsModal: React.FC<PokemonDetailsModalProps> = ({ pokemonId, on
   const pokemonDetails = pokemonDetailRedux.details;
 
   return (
-    <Modal
-      open={true}
-      onClose={onClose}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 0, padding: 0 }}
-    >
-      <Card style={{ width: '300px', overflow: 'hidden' }}>
-        <CardContent
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center ',
-            height: '100%'
-          }}
-        >
+    <Modal open={true} onClose={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Card style={{ width: '300px' }}>
+        <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
           <CloseIcon onClick={onClose} style={{ alignSelf: 'flex-end' }} />
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <CardMedia
-              component="img"
-              alt={pokemonDetails?.name}
-              image={pokemonDetails?.sprites.back_default}
-              style={{ width: '150%' }}
-            />
-            <Typography variant="h5">{pokemonDetails?.name}</Typography>
-            <Typography style={{ fontWeight: 'bold' }}>ID:</Typography>
-            {pokemonDetails?.id}
-            <Typography style={{ fontWeight: 'bold' }}>Habilidades:</Typography>
-            {pokemonDetails?.abilities.map((ability, index) => (
-              <Typography key={index}>{ability.ability.name}</Typography>
-            ))}
+            <CardMedia component="img" alt={pokemonDetails?.name} image={pokemonDetails?.sprites.back_default} />
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                {pokemonDetails?.name}
+              </Typography>
+              <Typography>
+                <b>Id:</b> {pokemonDetails?.id}
+              </Typography>
+              <Typography style={{ fontWeight: 'bold' }}>Habilidades:</Typography>
+              {pokemonDetails?.abilities.map((ability, index) => (
+                <Typography key={index}>{ability.ability.name}</Typography>
+              ))}
+            </Grid>
           </Grid>
         </CardContent>
       </Card>

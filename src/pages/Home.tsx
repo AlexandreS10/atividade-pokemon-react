@@ -24,7 +24,11 @@ const Home: React.FC = () => {
 
   return (
     <Box
-      style={{ backgroundImage: "url('./image/raios-de-grunge.avif')", backgroundSize: 'cover' }}
+      style={{
+        backgroundImage: "url('./image/raios-de-grunge.avif')",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+      }}
       sx={{ flexGrow: 1 }}
     >
       <ButtonAppBar />
