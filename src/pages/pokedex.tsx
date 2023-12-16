@@ -3,8 +3,10 @@ import React from 'react';
 import { Typography, Grid, Box } from '@mui/material';
 import { ButtonAppBar } from '../components/Navbar';
 import PokemonCard from '../components/PokemonCard';
+import { useAppSelector } from '../store/hooks';
 
 const Pokedex: React.FC = () => {
+  const pokedex = useAppSelector((state) => state.pokedex.pokedex);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>

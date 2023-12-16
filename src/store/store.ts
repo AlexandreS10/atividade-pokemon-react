@@ -8,7 +8,7 @@ const persistConfig = {
   key: 'atividade-pokemon-react',
   version: 1,
   storage,
-  whitelist: ['pokemons'],
+  whitelist: ['pokemons', 'pokedex'],
   blacklist: []
 };
 

@@ -23,7 +23,10 @@ const Home: React.FC = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      style={{ backgroundImage: "url('./image/raios-de-grunge.avif')", backgroundSize: 'cover' }}
+      sx={{ flexGrow: 1 }}
+    >
       <ButtonAppBar />
       <Grid container spacing={2} mt={2}>
         {pokemonsRedux.pokemons.map((pokemon) => (
