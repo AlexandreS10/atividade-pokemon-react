@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export interface TypePokemonType {
@@ -27,6 +27,8 @@ export interface PokemonsSliceType {
   previous: string | null;
   pokemons: PokemonType[];
   loading: boolean;
+  currentPage: number;
+  totalPages: number;
 }
 
 const initialState: PokemonsSliceType = {
@@ -34,11 +36,15 @@ const initialState: PokemonsSliceType = {
   next: '',
   previous: '',
   pokemons: [],
-  loading: false
+  loading: false,
+  currentPage: 1, // Adicione a informação da página atual ao estado inicial
+  totalPages: 1
 };
 
-export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (urlParams: string | undefined) => {
-  const url = urlParams ? urlParams : 'https://pokeapi.co/api/v2/pokemon'; //atribui a url da api a uma variavel e uma condicao para que ela sirva de parametro para a minha função assincrona
+export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (page: number = 1) => {
+  const limit = 20; // Número de Pokémon por página
+  const offset = (page - 1) * limit;
+  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`; //atribui a url da api a uma variavel e uma condicao para que ela sirva de parametro para a minha função assincrona
 
   try {
     const response = await axios.get(url); //faco uma requisicão get com o axios
@@ -73,7 +79,9 @@ export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (urlPa
         count: data.count,
         next: data.next,
         previous: data.previous,
-        pokemons: pokemons
+        pokemons: pokemons,
+        currentPage: page,
+        totalPages: Math.ceil(data.count / limit)
       };
     }
   } catch (error) {
@@ -87,6 +95,9 @@ const pokemonSlice = createSlice({
   reducers: {
     clear: () => {
       return initialState;
+    },
+    setCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
     }
   },
   extraReducers(builder) {
@@ -103,9 +114,11 @@ const pokemonSlice = createSlice({
         state.next = action.payload?.next;
         state.previous = action.payload?.previous;
         state.pokemons = action.payload?.pokemons || [];
+        state.currentPage = action.payload?.currentPage || 1;
+        state.totalPages = action.payload?.totalPages || 1;
         state.loading = false;
       });
   }
 });
-export const { clear } = pokemonSlice.actions;
+export const { clear, setCurrentPage } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

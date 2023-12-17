@@ -4,23 +4,32 @@ import { Box, CircularProgress, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { useEffect } from 'react';
 import { getPokemons } from '../store/pokemons/pokemonSlice';
-// import { BasicPagination } from '../components/BasicPagination';
+import { BasicPagination } from '../components/BasicPagination';
 import { ButtonAppBar } from '../components/Navbar';
 import PokemonCard from '../components/PokemonCard';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const pokemonsRedux = useAppSelector((state) => state.pokemons);
+  const itemsPorPagina = 20;
+
+  const totalPages = Math.ceil(pokemonsRedux.count / itemsPorPagina);
 
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(getPokemons());
-    }, 300);
+    // Ao montar o componente, buscar a primeira página de pokémons
+    dispatch(getPokemons(1));
   }, []);
+
+  useEffect(() => {
+    dispatch(getPokemons(pokemonsRedux.currentPage));
+  }, [pokemonsRedux.currentPage]);
 
   if (pokemonsRedux.loading) {
     return <CircularProgress />;
   }
+  const handlePaginationChange = (page: number) => {
+    dispatch(getPokemons(page));
+  };
 
   return (
     <Box
@@ -39,7 +48,11 @@ const Home: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      {/* <BasicPagination /> */}
+      <BasicPagination
+        pageCount={totalPages}
+        onChange={handlePaginationChange}
+        currentPage={pokemonsRedux.currentPage}
+      />
     </Box>
   );
 };
