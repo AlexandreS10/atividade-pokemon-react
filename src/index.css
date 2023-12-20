@@ -11,3 +11,12 @@
 .css-hyum1k-MuiToolbar-root {
   justify-content: space-between;
 }
+.css-wjh20t-MuiPagination-ul {
+  justify-content: center;
+}
+button.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
+  color: white;
+}
+MuiPaginationItem.css-1v2lvtn-MuiPaginationItem-root {
+  color: white;
+}
