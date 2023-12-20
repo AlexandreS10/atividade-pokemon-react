@@ -12,7 +12,7 @@ const Pokedex: React.FC = () => {
       <Box sx={{ flexGrow: 1 }}>
         <ButtonAppBar />
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Typography variant="h3">pokédex</Typography>
+          <Typography variant="h3">Pokédex( Pokemons Favoritos)</Typography>
         </div>
         <Grid container spacing={2} mt={2}>
           {pokedex.map((pokemon) => (
