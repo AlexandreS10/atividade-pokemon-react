@@ -41,11 +41,8 @@ const initialState: PokemonsSliceType = {
   totalPages: 1
 };
 
-export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (page: number = 1) => {
-  const limit = 20; // Número de Pokémon por página
-  const offset = (page - 1) * limit;
-  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`; //atribui a url da api a uma variavel e uma condicao para que ela sirva de parametro para a minha função assincrona
-
+export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (urlParams: string | undefined) => {
+  const url = urlParams ? urlParams : 'https://pokeapi.co/api/v2/pokemon';
   try {
     const response = await axios.get(url); //faco uma requisicão get com o axios
 
@@ -72,16 +69,13 @@ export const getPokemons = createAsyncThunk('pokemons/getPokemons', async (page:
           };
           return pokemon;
         }
-        return null;
       });
       const pokemons = await Promise.all(promises);
       return {
         count: data.count,
         next: data.next,
         previous: data.previous,
-        pokemons: pokemons,
-        currentPage: page,
-        totalPages: Math.ceil(data.count / limit)
+        pokemons: pokemons
       };
     }
   } catch (error) {
@@ -114,8 +108,6 @@ const pokemonSlice = createSlice({
         state.next = action.payload?.next;
         state.previous = action.payload?.previous;
         state.pokemons = action.payload?.pokemons || [];
-        state.currentPage = action.payload?.currentPage || 1;
-        state.totalPages = action.payload?.totalPages || 1;
         state.loading = false;
       });
   }

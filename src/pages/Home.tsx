@@ -1,36 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { Box, CircularProgress, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, CircularProgress, Grid, Pagination, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { useEffect } from 'react';
 import { getPokemons } from '../store/pokemons/pokemonSlice';
-import { BasicPagination } from '../components/BasicPagination';
 import { ButtonAppBar } from '../components/Navbar';
 import PokemonCard from '../components/PokemonCard';
+import Footer from '../components/Footer';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const pokemonsRedux = useAppSelector((state) => state.pokemons);
-  const itemsPorPagina = 20;
+  const countPokemons = useAppSelector((state) => state.pokemons.count);
 
-  const totalPages = Math.ceil(pokemonsRedux.count / itemsPorPagina);
-
-  useEffect(() => {
-    // Ao montar o componente, buscar a primeira página de pokémons
-    dispatch(getPokemons(1));
-  }, []);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getPokemons(pokemonsRedux.currentPage));
-  }, [pokemonsRedux.currentPage]);
+    if (page === 1) {
+      dispatch(getPokemons());
+    } else {
+      const offset = (page - 1) * 20;
+      dispatch(getPokemons(`https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${offset}`));
+    }
+  }, [page]);
 
   if (pokemonsRedux.loading) {
     return <CircularProgress />;
   }
-  const handlePaginationChange = (page: number) => {
-    dispatch(getPokemons(page));
-  };
-
   return (
     <Box
       style={{
@@ -48,11 +44,15 @@ const Home: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <BasicPagination
-        pageCount={totalPages}
-        onChange={handlePaginationChange}
-        currentPage={pokemonsRedux.currentPage}
-      />
+      <Stack spacing={2}>
+        <Pagination
+          color="primary"
+          page={page}
+          onChange={(event, value) => setPage(value)}
+          count={Math.ceil(countPokemons / 20)}
+        />
+      </Stack>
+      <Footer />
     </Box>
   );
 };
