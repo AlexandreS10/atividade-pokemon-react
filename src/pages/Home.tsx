@@ -48,7 +48,7 @@ const Home: React.FC = () => {
         <Pagination
           color="primary"
           page={page}
-          onChange={(event, value) => setPage(value)}
+          onChange={(_event, value) => setPage(value)}
           count={Math.ceil(countPokemons / 20)}
         />
       </Stack>
