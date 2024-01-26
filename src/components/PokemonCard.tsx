@@ -16,7 +16,7 @@ export interface PokemonCardProps {
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const pokedex = useSelector((state: RootState) => state.pokedex.pokedex);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [result, setResult] = useState<any | null>(null);
+  const [result] = useState<any | null>(null);
   const [listPokemon, setListPokemon] = React.useState<PokemonType[]>([]);
   const dispatch = useDispatch();
 

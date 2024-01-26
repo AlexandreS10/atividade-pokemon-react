@@ -9,7 +9,7 @@ interface BasicPaginationProps {
   currentPage: number;
 }
 export const BasicPagination: React.FC<BasicPaginationProps> = ({ pageCount, onChange }) => {
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     onChange(value);
   };
 
